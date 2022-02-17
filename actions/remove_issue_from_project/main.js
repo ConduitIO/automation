@@ -1,7 +1,7 @@
 const core = require('@actions/core');
-const graphql = require('@octokit/graphql');
+const { graphql } = require('@octokit/graphql');
 
-(async () => {
+const main = async function() {
 
   try {
     const token = core.getInput('repo-token');
@@ -14,8 +14,8 @@ const graphql = require('@octokit/graphql');
       },
     });
 
-    core.debug('LOOKING FOR ISSUE: ' + issue_node_id);
-    const {project_next_item} = await graphqlWithAuth(`
+    core.info('Looking for issue: ' + issue_node_id);
+    var project_next_item = await graphqlWithAuth(`
       query findIssue($issue_id: ID!) {
         node(id: $issue_id) {
           ... on Issue {
@@ -39,18 +39,17 @@ const graphql = require('@octokit/graphql');
 
     core.debug(JSON.stringify(project_next_item));
 
-    const nodes = queryResult["node"]["projectNextItems"]["nodes"];
+    const nodes = project_next_item["node"]["projectNextItems"]["nodes"];
     var found_id;
 
     for(let node_id = 0; node_id < nodes.length; node_id++) {
-      console.log(JSON.stringify(nodes[node_id]));
       if (nodes[node_id]["project"]["id"] === project) {
         found_id = nodes[node_id]["id"];
       }
     }
 
     if (found_id.length > 1) {
-      console.log("DELETING PROJECT ISSUE: " + issue_node_id);
+      core.info("Deleting Project Issue: " + issue_node_id);
       await graphqlWithAuth(`
         mutation($project:ID!, $issue:ID!) {
           deleteProjectNextItem(input: {projectId: $project, itemId: $issue}) {
@@ -63,11 +62,12 @@ const graphql = require('@octokit/graphql');
         issue: found_id,
       })
     } else {
-      console.log("COULDNT FIND ISSUE " + issue_node_id + " on Project " + project);
+      core.info("Couldnt find issue " + issue_node_id + " on Project " + project);
     }
 
   } catch (error) {
     core.setFailed(error.message);
   }
 
-})();
+}
+main();

@@ -12,5 +12,8 @@
     "@actions/core": "^1.6.0",
     "@actions/github": "^5.0.0",
     "@octokit/graphql": "^4.8.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.33.3"
   }
 }

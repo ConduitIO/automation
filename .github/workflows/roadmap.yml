@@ -20,30 +20,28 @@ jobs:
       # note that if the item was already on the roadmap we
       # get an error from the api. that's ok.
       - name: Add to Roadmap
-        uses: octokit/graphql-actions@v2.x
         env:
           GITHUB_TOKEN: ${{ secrets.project-automation-token }}
-        with:
-          query: |
-             mutation($project:ID!, $issue:ID!) {
+          ISSUE_ID: ${{ github.event.issue.node_id }}
+          PROJECT_ID: ${{ inputs.project }}
+        run: |
+          item_id="$( gh api graphql -f query='
+            mutation($project:ID!, $issue:ID!) {
               addProjectNextItem(input: {projectId: $project, contentId: $issue}) {
                 projectNextItem {
                   id
                 }
               }
-            }
-          project: ${{ inputs.project }}
-          issue: ${{ github.event.issue.node_id }}
+            }' -f project=$PROJECT_ID -f issue=$ISSUE_ID )"
 
   remove_from_roadmap:
     runs-on: ubuntu-latest
-    if: github.event.action == 'labeled' && (contains(github.event.issue.labels.*.name, 'roadmap') == false)
+    if: github.event.action == 'unlabeled' && (contains(github.event.issue.labels.*.name, 'roadmap') == false)
     steps:
       - name: Remove from Roadmap
-        uses: ./.github/actions/remove_issue_from_project
+        uses: conduitio/automation/actions/remove_issue_from_project@main
         with:
           project: ${{ inputs.project }}
-          issue: ${{ github.event.issue.node_id }}
-        secrets:
-          project-automation-token: ${{ secrets.project-automation-token }}
+          issue-node-id: ${{ github.event.issue.node_id }}
+          repo-token: ${{ secrets.project-automation-token }}
 
