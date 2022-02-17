@@ -9,25 +9,24 @@ on:
         required: false
         type: string
     secrets:
-      PROJECT_AUTOMATION:
+      project-automation-token:
         required: true
 
 jobs:
   triage_new_issues:
     runs-on: ubuntu-latest
     steps:
-      - uses: octokit/graphql-actions@v2.x
-        with:
-          query: |
+      - name: Add to Main
+        env:
+          GITHUB_TOKEN: ${{ secrets.project-automation-token }}
+          ISSUE_ID: ${{ github.event.issue.node_id }}
+          PROJECT_ID: ${{ inputs.project }}
+        run: |
+          item_id="$( gh api graphql -f query='
             mutation($project:ID!, $issue:ID!) {
               addProjectNextItem(input: {projectId: $project, contentId: $issue}) {
                 projectNextItem {
                   id
                 }
               }
-            }
-          project: ${{ inputs.project }}
-          issue: ${{ github.event.issue.node_id }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+            }' -f project=$PROJECT_ID -f issue=$ISSUE_ID )"
