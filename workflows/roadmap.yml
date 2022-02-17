@@ -1,0 +1,49 @@
+name: roadmap-automation
+
+on:
+  workflow_call:
+    inputs:
+      project:
+        description: 'Node id of the Org-level Beta project for Roadmaps'
+        default: PN_kwDOBL3ZPs4AAigJ
+        required: false
+        type: string
+    secrets:
+      project-automation-token:
+        required: true
+
+jobs:
+  add_to_roadmap:
+    runs-on: ubuntu-latest
+    if: github.event.action == 'labeled' && contains(github.event.issue.labels.*.name, 'roadmap')
+    steps:
+      # note that if the item was already on the roadmap we
+      # get an error from the api. that's ok.
+      - name: Add to Roadmap
+        uses: octokit/graphql-actions@v2.x
+        env:
+          GITHUB_TOKEN: ${{ secrets.project-automation-token }}
+        with:
+          query: |
+             mutation($project:ID!, $issue:ID!) {
+              addProjectNextItem(input: {projectId: $project, contentId: $issue}) {
+                projectNextItem {
+                  id
+                }
+              }
+            }
+          project: ${{ inputs.project }}
+          issue: ${{ github.event.issue.node_id }}
+
+  remove_from_roadmap:
+    runs-on: ubuntu-latest
+    if: github.event.action == 'labeled' && (contains(github.event.issue.labels.*.name, 'roadmap') == false)
+    steps:
+      - name: Remove from Roadmap
+        uses: ./.github/actions/remove_issue_from_project
+        with:
+          project: ${{ inputs.project }}
+          issue: ${{ github.event.issue.node_id }}
+        secrets:
+          project-automation-token: ${{ secrets.project-automation-token }}
+

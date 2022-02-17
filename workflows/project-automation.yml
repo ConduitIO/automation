@@ -1,0 +1,33 @@
+name: project-management
+
+on:
+  workflow_call:
+    inputs:
+      project:
+        description: 'Node id of the Org-level Beta project'
+        default: PN_kwDOBL3ZPs4AAy9q
+        required: false
+        type: string
+    secrets:
+      PROJECT_AUTOMATION:
+        required: true
+
+jobs:
+  triage_new_issues:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: octokit/graphql-actions@v2.x
+        with:
+          query: |
+            mutation($project:ID!, $issue:ID!) {
+              addProjectNextItem(input: {projectId: $project, contentId: $issue}) {
+                projectNextItem {
+                  id
+                }
+              }
+            }
+          project: ${{ inputs.project }}
+          issue: ${{ github.event.issue.node_id }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

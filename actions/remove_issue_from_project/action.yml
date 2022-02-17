@@ -1,0 +1,16 @@
+name: 'Remove Issue from Project Beta'
+description: 'Removes an issue from a Beta Project'
+author: 'Rimas Silkaitis <rimas@meroxa.io>'
+inputs:
+  repo-token:
+    description: 'The GH_TOKEN secret can be passed in using {{ secrets.GITHUB_TOKEN }}'
+    required: true
+  project:
+    description: 'The node id of the beta project'
+    required: true
+  issue-node-id:
+    description: 'Node id of the issue thats being removed'
+    required: true
+runs:
+  using: 'node16'
+  main: 'main.js'
