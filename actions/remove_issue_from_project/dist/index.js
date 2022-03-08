@@ -6613,7 +6613,13 @@ const main = async function() {
     core.debug(JSON.stringify(project_next_item));
 
     const nodes = project_next_item["node"]["projectNextItems"]["nodes"];
-    var found_id;
+    var found_id = "";
+
+    core.debug("Nodes: " + JSON.stringify(nodes));
+    if (nodes === undefined) {
+      core.info("Couldn't find issue (" + issue_node_id + ") on project (" + project + ")");
+      process.exit(0);
+    }
 
     for(let node_id = 0; node_id < nodes.length; node_id++) {
       if (nodes[node_id]["project"]["id"] === project) {
