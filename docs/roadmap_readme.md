@@ -12,22 +12,43 @@ The roadmap for Conduit is communicated via a [GitHub Project]() and uses [Miles
 * When a non-roadmap item does get delivered in a release, add that issue to the roadmap project
 * If an issue has its `roadmap` label removed will be removed from the roadmap
 
-## Actions
+### Actions
 
 A handful of actions and workflows power all of the principles that the core team abides by for roadmap development. For more information on what each action does, check out each action's readme:
 
 * [Remove Issue From Project]()
 * [Move Incomplete Issues From Milestone]()
-* [
+* [Create Milestones]()
 
 ## Using Conduit Product Automation
 
-⚠️a **WARNING** ⚠️  If you'd like to use Conduit Product Automation for your own project, it's recommended that you fork the repository into your own organization. The Conduit team can't guarantee that the automation will remain as-is. We're going to continue to develop this to meet the needs of our own organization and product.
+⚠️  **WARNING** ⚠️  If you'd like to use Conduit Product Automation for your own project, it's recommended that you fork the repository into your own organization. The Conduit team can't guarantee that the automation will remain as-is. We're going to continue to develop this to meet the needs of our own organization and product.
 
 ### Getting Set Up
 
+This process only works by using GitHub Actions ability to call other workflows. We're going to use the ConduitIO org, the conduit repo, and the automation repo to illustrate how to set this up.
 
+1. Generate an API Key used for Project Automation. You'll need to go into `Developer Settings` within your Settings Menu. Once there, create a Personal Access Token. You'll need these scopes for the automation to work:
+    * `public_repo`
+    * `write:org`
+    * `read:org`
+    * `write:discussion`
+    * `read:discussion`
+    * `workflow`
+2. With the generated token, copy that and create a new GitHub actions secret in the `conduit` repo. It should look something like this:
+3. Create a new org-level GitHub Projects (beta) board. Keep in mind that this is the new GitHub Projects not the legacy version. You'll know the difference because legacy projects only gave you the ability to use Kanban-style project management.
+4. Once that project has been created, you'll need to get the project id. This id isn't the id that's used in URL for the board. You'll need to get the node id. The node id is used as a global identifier in the GitHub API. With the API key that you generated before, issue this command in your terminal to get the node id for the project. Make sure to change `ConduitIO` and `3` to the appropriate org and use the project id from the url for your project. This example uses the github command line tool to make it happen. Have that installed along with `jq`:
+    ```
+    $ gh api graphql -f query='
+        query($org:String = "ConduitIO", $project:Int = 3) {
+          organization(login:$org) {
+            projectNext(number:$project) {
+              id
+            }
+          }
+        }' | jq -r '.data.organization.projectNext.id'
 
-
-
-
+      PN_kwDOBL3ZPs4AAigJ
+    ```
+5. Now that you have the Node Id for your project, it's time to set up the workflows! There's two that you're going to need to set up.
+6.
