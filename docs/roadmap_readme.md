@@ -35,7 +35,11 @@ This process only works by using GitHub Actions ability to call other workflows.
     * `write:discussion`
     * `read:discussion`
     * `workflow`
+
+
 2. With the generated token, copy that and create a new GitHub actions secret in the `conduit` repo. It should look something like this:
+
+
 3. Create a new org-level GitHub Projects (beta) board. Keep in mind that this is the new GitHub Projects not the legacy version. You'll know the difference because legacy projects only gave you the ability to use Kanban-style project management.
 4. Once that project has been created, you'll need to get the project id. This id isn't the id that's used in URL for the board. You'll need to get the node id. The node id is used as a global identifier in the GitHub API. With the API key that you generated before, issue this command in your terminal to get the node id for the project. Make sure to change `ConduitIO` and `3` to the appropriate org and use the project id from the url for your project. This example uses the github command line tool to make it happen. Have that installed along with `jq`:
     ```
@@ -51,4 +55,11 @@ This process only works by using GitHub Actions ability to call other workflows.
       PN_kwDOBL3ZPs4AAigJ
     ```
 5. Now that you have the Node Id for your project, it's time to set up the workflows! There's two that you're going to need to set up.
-6.
+6. In the conduit repo, we need to add a workflow to handle the issues getting updated on the board. Call the workflow file whatever you'd like. What you'll be doing is setting up some inputs to the receiving workflow. Your workflow should look like this:
+    ```yaml
+
+    ```
+7. The second workflow that you'll need to add manages all of the milestones and the release notes. We call it `milestones.yml` but feel free do call it whatever you want. This should live in the `.github/workflows` directory in your repo.
+    ```yaml
+
+    ```
