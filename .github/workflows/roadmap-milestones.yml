@@ -1,0 +1,38 @@
+name: roadmap-automation-milestones
+
+on:
+  workflow_call:
+    inputs:
+      project:
+        description: 'Node ID of the Org-level Beta project for Roadmap'
+        required: true
+        type: string
+      cycle_length:
+        # If an input isn't given, this will default to 6 months
+        # between releases
+        description: 'Amount of time between releases'
+        default: 6
+        type: integer
+        required: false
+      planned_versions:
+        # There will always be a `future` milestone. As long as a due date isn't
+        # added to that one, it will never be closed.
+        description: 'How many named versions should be planned'
+        default: 2
+        type: integer
+        required: false
+
+    secrets:
+      project-automation-token:
+        required: true
+
+jobs:
+  run_through_milestones:
+    runs-on: unbuntu-latest
+    steps:
+      # todo need to see if there are any old milstones. Not sure if there will be
+      - name: Check if old milestones
+
+      - name: Exit if no old milestones
+
+      - name: Manage Milestones

@@ -14,11 +14,10 @@ The roadmap for Conduit is communicated via a [GitHub Project]() and uses [Miles
 
 ### Actions
 
-A handful of actions and workflows power all of the principles that the core team abides by for roadmap development. For more information on what each action does, check out each action's readme:
+A handful of actions and workflows power all of the principles that the core team abides by for roadmap development. For more information on what each action does, check out each action's readme. Some actions are reused from the Actions Marketplace.
 
 * [Remove Issue From Project]()
-* [Move Incomplete Issues From Milestone]()
-* [Create Milestones]()
+* [Manage Milestones]()
 
 ## Using Conduit Product Automation
 
@@ -37,7 +36,7 @@ This process only works by using GitHub Actions ability to call other workflows.
     * `workflow`
 
 
-2. With the generated token, copy that and create a new GitHub actions secret in the `conduit` repo. It should look something like this:
+2. With the generated token, copy that and create a new GitHub actions secret in the `conduit` repo. Make sure that you call the token `PROJECT_AUTOMATION`. It should look something like this:
 
 
 3. Create a new org-level GitHub Projects (beta) board. Keep in mind that this is the new GitHub Projects not the legacy version. You'll know the difference because legacy projects only gave you the ability to use Kanban-style project management.
@@ -56,12 +55,37 @@ This process only works by using GitHub Actions ability to call other workflows.
 
       PN_kwDOBL3ZPs4AAigJ
     ```
+
+
 5. Now that you have the Node Id for your project, it's time to set up the workflows! There's two that you're going to need to set up.
+
+
 6. In the conduit repo, we need to add a workflow to handle the issues getting updated on the board. Call the workflow file whatever you'd like. What you'll be doing is setting up some inputs to the receiving workflow. Your workflow should look like this:
     ```yaml
+    name: roadmap issues
 
+    on:
+      issues:
+        types: [labeled, unlabeled]
+
+    jobs:
+      roadmap:
+        uses: ConduitIO/automation/.github/workflows/roadmap.yml@main
+        secrets:
+          project-automation-token: ${{ secrets.PROJECT_AUTOMATION }}
     ```
+
+
 7. The second workflow that you'll need to add manages all of the milestones and the release notes. We call it `milestones.yml` but feel free do call it whatever you want. This should live in the `.github/workflows` directory in your repo.
     ```yaml
+    name: Manage Milestones
+
+    on:
+      schedule:
+        # * is a special character in YAML, so you have to quote this string
+        # we want the nightly builds only on work days
+        # this runs quite often. feel free to change it to suit your needs.
+        - cron:  '0 0 * * 2-6'
+      workflow_dispatch:
 
     ```
