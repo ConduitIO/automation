@@ -1,15 +1,21 @@
-name: 'Remove Issue from Project Beta'
-description: 'Removes an issue from a Beta Project'
+name: 'Manage Milestones'
+description: 'Moves all of the issues from old milestones to new one and cleans up roadmap board'
 author: 'Rimas Silkaitis <rimas@meroxa.io>'
 inputs:
-  project:
-    description: 'The node id of the beta project'
-    required: true
-  issue-node-id:
-    description: 'Node id of the issue thats being removed'
+  org-repo:
+    description: 'The org/repo name for where the milestones exist'
     required: true
   repo-token:
     description: 'The GH_TOKEN secret can be passed in using {{ secrets.GITHUB_TOKEN }}'
+    required: true
+  milestone-node-id:
+    description: 'Node Id of the milestone that is being closed'
+    required: true
+  next-milestone-node-id:
+    description: 'Node Id of the milestone that should receive all uncompleted issues'
+    required: true
+  project-node-id:
+    description: 'Node Id of the beta project that houses the roadmap'
     required: true
 runs:
   using: 'node16'
