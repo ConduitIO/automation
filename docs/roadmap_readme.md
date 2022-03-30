@@ -73,6 +73,8 @@ This process only works by using GitHub Actions ability to call other workflows.
     jobs:
       roadmap:
         uses: ConduitIO/automation/.github/workflows/roadmap.yml@main
+        with:
+          project: PN_kwDOBL3ZPs4AAigJ
         secrets:
           project-automation-token: ${{ secrets.PROJECT_AUTOMATION }}
     ```
@@ -85,7 +87,8 @@ This process only works by using GitHub Actions ability to call other workflows.
     on:
       schedule:
         # * is a special character in YAML, so you have to quote this string
-        # we want the nightly builds only on work days
+        # we want the check for milestone management to only happen on work
+        # days.
         # this runs quite often. feel free to change it to suit your needs.
         - cron:  '0 0 * * 2-6'
       workflow_dispatch:
@@ -93,6 +96,9 @@ This process only works by using GitHub Actions ability to call other workflows.
     jobs:
       milestones:
         uses: ConduitIO/automation/.github/workflows/milestones.yml@main
+        with:
+          org-repo: 'conduitio/conduit'
+          project: PN_kwDOBL3ZPs4AAigJ
         secrets:
           project-automation-token: ${{ secrets.PROJECT_AUTOMATION }}
     ```
