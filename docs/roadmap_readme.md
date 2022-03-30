@@ -1,6 +1,6 @@
 # Roadmap Automation
 
-The roadmap for Conduit is communicated via a [GitHub Project]() and uses [Milestones]() to organize each release cycle. The Conduit core team automates as many of the processes as possible so that the roadmap is always a reflection of current state.
+The roadmap for Conduit is communicated via a [GitHub Project](https://github.com/orgs/ConduitIO/projects/3) and uses [Milestones](https://github.com/ConduitIO/conduit/milestones) to organize each release cycle. The Conduit core team automates as many of the processes as possible so that the roadmap is always a reflection of current state.
 
 ## Principles & Workflow Rules
 
@@ -10,15 +10,15 @@ The roadmap for Conduit is communicated via a [GitHub Project]() and uses [Miles
 * When a release does happen, communciate what made it into the release and what got moved in the repo's Discussions section
 * Sometimes bugs and keep the lights on work needs to happen during a release and that's not necessarily roadmap work.
 * When a non-roadmap item does get delivered in a release, add that issue to the roadmap project
-* If an issue has its `roadmap` label removed will be removed from the roadmap
+* If an issue has its `roadmap` label removed, it will be removed from the roadmap
 
 ### Actions
 
-A handful of actions and workflows power all of the principles that the core team abides by for roadmap development. For more information on what each action does, check out each action's readme. Some actions are reused from the Actions Marketplace.
+A handful of actions and workflows power all of the principles that the core team abides by for roadmap development. For more information on what each action does, check out each action. Some actions are reused from the Actions Marketplace and that will be called out in the workflow file.
 
-* [Remove Issue From Project]()
-* [Oldest Milestone]()
-* [Manage Milestones]()
+* [Remove Issue From Project](https://github.com/ConduitIO/automation/tree/main/actions/remove_issue_from_project)
+* [Check for Old Milestones](https://github.com/ConduitIO/automation/tree/main/actions/check_for_old_milestones)
+* [Manage Milestones](https://github.com/ConduitIO/automation/tree/roadmap-automation/actions/manage_milestones)
 
 ## Using Conduit Product Automation
 
@@ -39,6 +39,7 @@ This process only works by using GitHub Actions ability to call other workflows.
 
 2. With the generated token, copy that and create a new GitHub actions secret in the `conduit` repo. Make sure that you call the token `PROJECT_AUTOMATION`. It should look something like this:
 
+![Org Level Secrets](./img/org-level-secret.png)
 
 3. Create a new org-level GitHub Projects (beta) board. Keep in mind that this is the new GitHub Projects not the legacy version. You'll know the difference because legacy projects only gave you the ability to use Kanban-style project management.
 
@@ -77,7 +78,7 @@ This process only works by using GitHub Actions ability to call other workflows.
     ```
 
 
-7. The second workflow that you'll need to add manages all of the milestones and the release notes. We call it `milestones.yml` but feel free do call it whatever you want. This should live in the `.github/workflows` directory in your repo.
+7. The second workflow that you'll need to add manages all of the milestones and the release notes. We call it `milestones.yml` but feel free to call it whatever you want. This should live in the `.github/workflows` directory in your repo.
     ```yaml
     name: Manage Milestones
 
@@ -89,4 +90,9 @@ This process only works by using GitHub Actions ability to call other workflows.
         - cron:  '0 0 * * 2-6'
       workflow_dispatch:
 
+    jobs:
+      milestones:
+        uses: ConduitIO/automation/.github/workflows/milestones.yml@main
+        secrets:
+          project-automation-token: ${{ secrets.PROJECT_AUTOMATION }}
     ```
