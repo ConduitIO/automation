@@ -7170,6 +7170,7 @@ const main = async function() {
 
     //if request failed
     if(response.status != 200) {
+        core.error('Failed Response: ' + JSON.stringify(response));
         core.setFailed(`Milestone cannot be closed, github responded with an invalid status (${response.status}).`)
         reject();
         return;

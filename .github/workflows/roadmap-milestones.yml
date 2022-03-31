@@ -36,7 +36,7 @@ jobs:
         if: ${{ steps.milestone_check.outputs.found == 'true' }}
         uses: conduitio/project_automation_testing/actions/manage_milestones@main
         with:
-          project-node-id: ${{ inputs.project }} # This is the automation testing board
+          project-node-id: ${{ inputs.project }}
           org-repo: ${{ inputs.org-repo }}
           repo-token: ${{ secrets.project-automation-token }}
           milestone-node-id: ${{ steps.milestone_check.outputs.milestone-node-id }}

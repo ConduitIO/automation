@@ -19,7 +19,6 @@ const main = async function() {
     // repository
     const milestoneNodeId = core.getInput('milestone-node-id');
 
-    //
     const nextMilestoneNodeId = core.getInput('next-milestone-node-id');
 
     // project node id is the node id of projectNext. This is used to make
@@ -34,11 +33,9 @@ const main = async function() {
 
     // Steps
     // - Find all of the issues in repository tagged to a specific milestone
-    // - For all issues that are closed in milestone, archive those cards on the board
+    // - For all issues that are closed in milestone, delete those cards on the board.
+    //     The new github projects boards dont have API calls for archiving the cards.
     // - For all issues that are open in the milestone, move them to the next milestone
-    //   + Bonus points for putting a comment in the issue that it was moved to next milestone
-    // - Create a new milestone and put a due date on it
-
     const milestoneIssueQuery = `
       query findIssues($milestoneNodeId: ID!, $first: Int = 50, $afterCursor: String = "") {
         node(id: $milestoneNodeId) {
@@ -173,6 +170,7 @@ const main = async function() {
 
     //if request failed
     if(response.status != 200) {
+        core.error('Failed Response: ' + JSON.stringify(response));
         core.setFailed(`Milestone cannot be closed, github responded with an invalid status (${response.status}).`)
         reject();
         return;

@@ -85,12 +85,15 @@ This process only works by using GitHub Actions ability to call other workflows.
     name: Manage Milestones
 
     on:
+      # It's recommended to change the schedule to something that works for
+      # your process. Conduit will run this once a week on Friday to
+      # coincide with the weekly 'whos going to work on what' meeting.
+      # You could remove schedule all together and only trigger this manually.
       schedule:
         # * is a special character in YAML, so you have to quote this string
         # we want the check for milestone management to only happen on work
         # days.
-        # this runs quite often. feel free to change it to suit your needs.
-        - cron:  '0 0 * * 2-6'
+        - cron:  '0 0 * * 6'
       workflow_dispatch:
 
     jobs:
