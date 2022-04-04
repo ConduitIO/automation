@@ -1,0 +1,43 @@
+name: roadmap-automation-milestones
+
+on:
+  workflow_call:
+    inputs:
+      project:
+        description: 'Node ID of the Org-level Beta project for Roadmap'
+        default: PN_kwDOBL3ZPs4AArww
+        required: false
+        type: string
+      org-repo:
+        description: 'organization and repo that has issues for roadmap'
+        default: "conduitio/project_automation_testing"
+        required: false
+        type: string
+    secrets:
+      project-automation-token:
+        required: true
+jobs:
+  manage_milestones:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for old milestones
+        uses: conduitio/project_automation_testing/actions/check_for_old_milestones@main
+        id: milestone_check
+        with:
+          org-repo: "conduitio/project_automation_testing"
+          repo-token: ${{ secrets.project-automation-token }}
+
+      - name: Echo the found milestone
+        env:
+          MILESTONE_ID: ${{ steps.milestone_check.outputs.milestone }}
+        run: echo $MILESTONE_ID
+
+      - name: Manage Milestones
+        if: ${{ steps.milestone_check.outputs.found == 'true' }}
+        uses: conduitio/project_automation_testing/actions/manage_milestones@main
+        with:
+          project-node-id: ${{ inputs.project }}
+          org-repo: ${{ inputs.org-repo }}
+          repo-token: ${{ secrets.project-automation-token }}
+          milestone-node-id: ${{ steps.milestone_check.outputs.milestone-node-id }}
+          next-milestone-node-id: ${{ steps.milestone_check.outputs.next-milestone-node-id }}

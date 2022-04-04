@@ -1,0 +1,20 @@
+name: 'Check for Released Milestone'
+description: 'Finds released milestones and returns the first one it finds. Means the due date of the milestone is the current date or older.'
+author: 'Rimas Silkaitis <rimas@meroxa.io>'
+inputs:
+  org-repo:
+    description: 'The org/repo name for where the milestones exist'
+    required: true
+  repo-token:
+    description: 'The GH_TOKEN secret can be passed in using {{ secrets.GITHUB_TOKEN }}'
+    required: true
+outputs:
+  milestone-node-id:
+    description: 'The milestone thats been released'
+  next-milestone-node-id:
+    description: 'The milestone that well move the uncomplete issues to'
+  found:
+    description: 'Boolean if we did find something'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
