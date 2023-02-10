@@ -8190,7 +8190,7 @@ const main = async function() {
                 title
                 number
                 state
-                projectNextItems(first: 50) {
+                projectItems(first: 50) {
                   nodes {
                     id
                     project {
@@ -8256,8 +8256,8 @@ const main = async function() {
       for(var i = 0; i < issues.length; i++) {
 
         // Make sure that the issue is part of the project that we want to delete it from
-        if (issues[i]["projectNextItems"]["nodes"].length > 0) {
-          var project = issues[i]["projectNextItems"]["nodes"].find(x => x.project.id === projectNodeId);
+        if (issues[i]["projectItems"]["nodes"].length > 0) {
+          var project = issues[i]["projectItems"]["nodes"].find(x => x.project.id === projectNodeId);
 
           if (project && issues[i]["state"] === "CLOSED") {
 
