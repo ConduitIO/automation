@@ -7766,7 +7766,7 @@ const main = async function() {
         var milestoneDueOn = new Date(milestones[i]["dueOn"]);
         if (currentDate >= milestoneDueOn && foundIndex == -1) {
           foundIndex = i;
-          core.info('Found Milestone: ' + milestones[i]);
+          core.info('Found Milestone: ' + json.stringify(milestones[i]));
         }
       }
     }
@@ -7789,7 +7789,7 @@ const main = async function() {
       if (milestones[foundIndex + 1]) {
         core.setOutput("next-milestone-node-id", milestones[foundIndex + 1]["id"]);
       } else {
-        core.setFailed("A next milestone does not exist. Please create one");
+        core.setFailed("A next milestone does not exist. Please create one.");
       }
     }
   } catch (error) {
