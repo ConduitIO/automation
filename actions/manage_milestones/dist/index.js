@@ -8206,11 +8206,11 @@ const main = async function() {
     `;
 
     const removeIssueFromBoard = `
-      mutation removeIssue($project: ID!, $projectNextItem: ID!) {
-        deleteProjectNextItem(
+      mutation removeIssue($project: ID!, $projectItem: ID!) {
+        deleteProjectV2Item(
           input: {
             projectId: $project
-            itemId: $projectNextItem
+            itemId: $projectItem
           }
         ) {
           deletedItemId
@@ -8266,7 +8266,7 @@ const main = async function() {
             // So we're going to delete them from the board.
             //
             core.info("Issue Deleted From Roadmap: " + issues[i]["id"]);
-            var removeResponse = await graphqlWithAuth(removeIssueFromBoard, { project: projectNodeId, projectNextItem: project["id"] });
+            var removeResponse = await graphqlWithAuth(removeIssueFromBoard, { project: projectNodeId, projectItem: project["id"] });
 
 
           } else if (issues[i]["state"] === "OPEN") {
