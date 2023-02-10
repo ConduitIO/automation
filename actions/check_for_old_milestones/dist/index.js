@@ -7766,7 +7766,7 @@ const main = async function() {
         var milestoneDueOn = new Date(milestones[i]["dueOn"]);
         if (currentDate >= milestoneDueOn && foundIndex == -1) {
           foundIndex = i;
-          core.info('Found Milestone: ' + json.stringify(milestones[i]));
+          core.info('Found Milestone: ' + JSON.stringify(milestones[i]));
         }
       }
     }
