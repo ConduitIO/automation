@@ -29,7 +29,7 @@ jobs:
 
       - name: Echo the found milestone
         env:
-          MILESTONE_ID: ${{ steps.milestone_check.outputs.milestone }}
+          MILESTONE_ID: ${{ steps.milestone_check.outputs.milestone-node-id }}
         run: echo $MILESTONE_ID
 
       - name: Manage Milestones
