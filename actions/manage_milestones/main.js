@@ -136,7 +136,7 @@ const main = async function() {
             // The behavior in the graphql api is that you can only have one milestone.
             // By setting it here, the other will get removed.
             //
-            core.info("Issue Moved to Next Milestone: " + issues[i]["id"]);
+            core.info(`Issue Moved to Next Milestone, ID: ${issues[i]["id"]} Title: ${issues[i]["title"]}`);
             await graphqlWithAuth(updateIssueMilestone, { issueNodeId: issues[i]["id"] , milestone: nextMilestoneNodeId });
 
           } else {
