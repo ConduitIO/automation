@@ -8265,7 +8265,7 @@ const main = async function() {
             // but projectNext projects dont have that capability yet via GraphQL or REST APIs.
             // So we're going to delete them from the board.
             //
-            core.info("Issue Deleted From Roadmap: " + issues[i]["id"]);
+            core.info(`Issue Deleted From Roadmap, ID: ${issues[i]["id"]} Title: ${issues[i]["title"]}`);
             var removeResponse = await graphqlWithAuth(removeIssueFromBoard, { project: projectNodeId, projectItem: project["id"] });
 
 
