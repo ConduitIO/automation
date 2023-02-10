@@ -39,7 +39,7 @@ jobs:
     if: github.event.action == 'unlabeled' && (contains(github.event.issue.labels.*.name, 'roadmap') == false)
     steps:
       - name: Remove from Roadmap
-        uses: hariso/automation/actions/remove_issue_from_project@main
+        uses: conduitio/automation/actions/remove_issue_from_project@main
         with:
           project: ${{ inputs.project }}
           issue-node-id: ${{ github.event.issue.node_id }}
