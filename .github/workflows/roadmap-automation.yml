@@ -1,0 +1,13 @@
+name: roadmap
+
+on:
+  issues:
+    types: [labeled, unlabeled]
+
+jobs:
+  roadmap:
+    uses: hariso/automation/.github/workflows/roadmap.yml@main
+    with:
+      project: PVT_kwHOACEOHM4AL0cO
+    secrets:
+      project-automation-token: ${{ secrets.PROJECT_AUTOMATION }}

@@ -27,8 +27,8 @@ jobs:
         run: |
           item_id="$( gh api graphql -f query='
             mutation($project:ID!, $issue:ID!) {
-              addProjectNextItem(input: {projectId: $project, contentId: $issue}) {
-                projectNextItem {
+              addProjectV2ItemById(input: {projectId: $project, contentId: $issue}) {
+                item {
                   id
                 }
               }
@@ -39,7 +39,7 @@ jobs:
     if: github.event.action == 'unlabeled' && (contains(github.event.issue.labels.*.name, 'roadmap') == false)
     steps:
       - name: Remove from Roadmap
-        uses: conduitio/automation/actions/remove_issue_from_project@main
+        uses: hariso/automation/actions/remove_issue_from_project@main
         with:
           project: ${{ inputs.project }}
           issue-node-id: ${{ github.event.issue.node_id }}

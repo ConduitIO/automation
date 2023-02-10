@@ -19,11 +19,10 @@ const main = async function() {
       query findIssue($issue_id: ID!) {
         node(id: $issue_id) {
           ... on Issue {
-            projectNextItems(first: 100) {
+            projectItems(first: 100) {
               totalCount
               nodes {
                 id
-                title
                 project {
                   id
                 }
@@ -39,7 +38,7 @@ const main = async function() {
 
     core.debug(JSON.stringify(project_next_item));
 
-    const nodes = project_next_item["node"]["projectNextItems"]["nodes"];
+    const nodes = project_next_item["node"]["projectItems"]["nodes"];
     var found_id = "";
 
     core.debug("Nodes: " + JSON.stringify(nodes));
@@ -58,7 +57,7 @@ const main = async function() {
       core.info("Deleting Project Issue: " + issue_node_id);
       await graphqlWithAuth(`
         mutation($project:ID!, $issue:ID!) {
-          deleteProjectNextItem(input: {projectId: $project, itemId: $issue}) {
+          deleteProjectV2Item(input: {projectId: $project, itemId: $issue}) {
             deletedItemId
           }
         }
