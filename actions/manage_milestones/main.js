@@ -52,7 +52,7 @@ const main = async function() {
                 title
                 number
                 state
-                projectNextItems(first: 50) {
+                projectItems(first: 50) {
                   nodes {
                     id
                     project {
@@ -68,11 +68,11 @@ const main = async function() {
     `;
 
     const removeIssueFromBoard = `
-      mutation removeIssue($project: ID!, $projectNextItem: ID!) {
-        deleteProjectNextItem(
+      mutation removeIssue($project: ID!, $projectItem: ID!) {
+        deleteProjectV2Item(
           input: {
             projectId: $project
-            itemId: $projectNextItem
+            itemId: $projectItem
           }
         ) {
           deletedItemId
@@ -118,8 +118,8 @@ const main = async function() {
       for(var i = 0; i < issues.length; i++) {
 
         // Make sure that the issue is part of the project that we want to delete it from
-        if (issues[i]["projectNextItems"]["nodes"].length > 0) {
-          var project = issues[i]["projectNextItems"]["nodes"].find(x => x.project.id === projectNodeId);
+        if (issues[i]["projectItems"]["nodes"].length > 0) {
+          var project = issues[i]["projectItems"]["nodes"].find(x => x.project.id === projectNodeId);
 
           if (project && issues[i]["state"] === "CLOSED") {
 
@@ -127,8 +127,8 @@ const main = async function() {
             // but projectNext projects dont have that capability yet via GraphQL or REST APIs.
             // So we're going to delete them from the board.
             //
-            core.info("Issue Deleted From Roadmap: " + issues[i]["id"]);
-            var removeResponse = await graphqlWithAuth(removeIssueFromBoard, { project: projectNodeId, projectNextItem: project["id"] });
+            core.info(`Issue Deleted From Roadmap, ID: ${issues[i]["id"]} Title: ${issues[i]["title"]}`);
+            var removeResponse = await graphqlWithAuth(removeIssueFromBoard, { project: projectNodeId, projectItem: project["id"] });
 
 
           } else if (issues[i]["state"] === "OPEN") {
@@ -136,7 +136,7 @@ const main = async function() {
             // The behavior in the graphql api is that you can only have one milestone.
             // By setting it here, the other will get removed.
             //
-            core.info("Issue Moved to Next Milestone: " + issues[i]["id"]);
+            core.info(`Issue Moved to Next Milestone, ID: ${issues[i]["id"]} Title: ${issues[i]["title"]}`);
             await graphqlWithAuth(updateIssueMilestone, { issueNodeId: issues[i]["id"] , milestone: nextMilestoneNodeId });
 
           } else {
