@@ -49,11 +49,11 @@ This process only works by using GitHub Actions ability to call other workflows.
     $ gh api graphql -f query='
         query($org:String = "ConduitIO", $project:Int = 3) {
           organization(login:$org) {
-            projectNext(number:$project) {
+            projectV2(number:$project) {
               id
             }
           }
-        }' | jq -r '.data.organization.projectNext.id'
+        }' | jq -r '.data.organization.projectV2.id'
 
       PN_kwDOBL3ZPs4AAigJ
     ```
