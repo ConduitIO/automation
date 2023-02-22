@@ -24,7 +24,7 @@ jobs:
         run: |
           item_id="$( gh api graphql -f query='
             mutation($project:ID!, $issue:ID!) {
-              addProjectNextItem(input: {projectId: $project, contentId: $issue}) {
+              addProjectV2ItemById(input: {projectId: $project, contentId: $issue}) {
                 projectNextItem {
                   id
                 }
