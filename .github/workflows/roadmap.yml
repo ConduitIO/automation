@@ -5,7 +5,7 @@ on:
     inputs:
       project:
         description: 'Node id of the Org-level Beta project for Roadmaps'
-        default: PN_kwDOBL3ZPs4AAigJ
+        default: PVT_kwDOBL3ZPs4AAigJ
         required: false
         type: string
     secrets:
