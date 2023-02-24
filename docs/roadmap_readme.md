@@ -55,7 +55,7 @@ This process only works by using GitHub Actions ability to call other workflows.
           }
         }' | jq -r '.data.organization.projectV2.id'
 
-      PN_kwDOBL3ZPs4AAigJ
+      PVT_kwDOBL3ZPs4AAigJ
     ```
 
 
@@ -74,7 +74,7 @@ This process only works by using GitHub Actions ability to call other workflows.
       roadmap:
         uses: ConduitIO/automation/.github/workflows/roadmap.yml@main
         with:
-          project: PN_kwDOBL3ZPs4AAigJ
+          project: PVT_kwDOBL3ZPs4AAigJ
         secrets:
           project-automation-token: ${{ secrets.PROJECT_AUTOMATION }}
     ```
@@ -101,7 +101,7 @@ This process only works by using GitHub Actions ability to call other workflows.
         uses: ConduitIO/automation/.github/workflows/milestones.yml@main
         with:
           org-repo: 'conduitio/conduit'
-          project: PN_kwDOBL3ZPs4AAigJ
+          project: PVT_kwDOBL3ZPs4AAigJ
         secrets:
           project-automation-token: ${{ secrets.PROJECT_AUTOMATION }}
     ```

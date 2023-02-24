@@ -5,7 +5,7 @@ on:
     inputs:
       project:
         description: 'Node id of the Org-level Beta project'
-        default: PN_kwDOBL3ZPs4AAy9q
+        default: PVT_kwDOBL3ZPs4AAy9q
         required: false
         type: string
     secrets:
