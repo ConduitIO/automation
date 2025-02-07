@@ -1,0 +1,66 @@
+name: 'Check connector tag'
+description: |
+  Checks if the tag format is valid and if the version in the tag matches the
+  version in the connector.yaml file. If the tag is invalid, it gets deleted.
+
+  This action is intended to be used in the release workflow of a Conduit
+  connector repository. It is recommended to place this action before the
+  GoReleaser action in the release workflow. This way, the release process will
+  be stopped if the tag is invalid, and the tag will be deleted.
+inputs:
+  github-token:
+    description: The GitHub token used to create an authenticated client
+    default: ${{ github.token }}
+    required: false
+  github-ref:
+    description: The GitHub ref to check
+    default: ${{ github.ref }}
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - name: Validate Tag Format
+      shell: bash
+      run: |
+        TAG=${GITHUB_REF#refs/tags/}
+
+        SV_REGEX="^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-((0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?(\+([0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*))?$"
+
+        if ! [[ $TAG =~ $SV_REGEX ]]; then
+          echo "$TAG is NOT a valid tag (expected format: v<semver>)"
+          exit 1
+        fi
+
+    - name: Check Version Consistency
+      shell: bash
+      run: |
+        # Extract tag and remove 'v' prefix if exists
+        TAG=${GITHUB_REF#refs/tags/}
+
+        # Read version from connector.yaml
+        YAML_VERSION=$(yq e '.specification.version' connector.yaml)
+
+        # Compare versions
+        if [[ "$TAG" != "$YAML_VERSION" ]]; then
+          echo "Version mismatch detected:"
+          echo "Git Tag: $TAG"
+          echo "connector.yaml Version: $YAML_VERSION"
+          exit 1
+        fi
+
+    - name: Delete Invalid Tag
+      if: failure()
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ inputs.github-token }}
+        script: |
+          const tag = context.ref.replace('refs/tags/', '')
+          try {
+            await github.rest.git.deleteRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `tags/${tag}`
+            })
+          } catch (error) {
+            console.log('Error deleting tag:', error)
+          }
