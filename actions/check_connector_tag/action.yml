@@ -42,9 +42,11 @@ runs:
 
         # Compare versions
         if [[ "$TAG" != "$YAML_VERSION" ]]; then
-          echo "Version mismatch detected:"
+          echo "WARNING! Version mismatch detected!"
           echo "Git Tag: $TAG"
           echo "connector.yaml Version: $YAML_VERSION"
+          echo ""
+          echo "Tag will be deleted."
           exit 1
         fi
 
